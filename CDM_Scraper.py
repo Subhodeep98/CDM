@@ -183,16 +183,17 @@ def main():
         elems = driver.find_elements(by=By.XPATH, value="//a[@href]")
 
         for elem in elems:
-
-            link = elem.get_attribute("href")
-
-            if 'https://cdm.unfccc.int/UserManagement/FileStorage/' in link:
-
-                driver.get(link)
-                result['Registry'] = "CDM"
-                new_data={'Doc_Type' : elem.text}
-                result = result.append(new_data, ignore_index=True)
-                time.sleep(2)
+            try:
+                link = elem.get_attribute("href")
+                if 'https://cdm.unfccc.int/UserManagement/FileStorage/' in link:
+                    driver.get(link)
+                    result['Registry'] = "CDM"
+                    new_data={'Doc_Type' : elem.text}
+                    result = result.append(new_data, ignore_index=True)
+                    time.sleep(2)
+            except StaleElementReferenceException:
+                pass
+                    time.sleep(2)
 
     duplicate_files = find_duplicate_files(folder_path)
     if duplicate_files:
